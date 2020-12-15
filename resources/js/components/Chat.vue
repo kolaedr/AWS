@@ -1,12 +1,28 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-md-8">
+      <div class="col-md-10">
         <div class="card">
           <div class="card-header">Example Component</div>
           <div class="card-body">
             <form action="" @submit.prevent="sendMsg">
-              <div class="form-group">
+              <v-row cols="12">
+                <v-col cols="9">
+                  <v-text-field
+                    label="Solo"
+                    v-model="msg"
+                    solo
+                    clearable
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3">
+                  <v-btn color="primary" elevation="2" icon x-large   @click.prevent="sendMsg"
+                    ><v-icon v-html="'$send'"></v-icon
+                  ></v-btn>
+                </v-col>
+              </v-row>
+
+              <!-- <div class="form-group">
                 <label for="msg">msg</label>
                 <input
                   type="text"
@@ -16,13 +32,14 @@
                   v-model="msg"
                   @keypress.enter="sendMsg"
                 />
-              </div>
-              <button class="btn btn-primary">SEND</button>
+              </div> -->
             </form>
           </div>
           <div class="card-body">
             <slot>I'm an example component.</slot>
-            <p v-for="msg in messages" :key="msg.id">{{msg.id}}{{msg.text}}</p>
+            <p v-for="msg in messages" :key="msg.id">
+              {{ msg.id }}{{ msg.text }}
+            </p>
           </div>
         </div>
       </div>
@@ -42,28 +59,27 @@ export default {
   },
   methods: {
     sendMsg() {
-      // console.log("Component mounted.", this.msg);
-      axios.post('/messages', {body: this.msg});
-            // this.messages.push(this.msg);
-            this.msg = '';
+      console.log('111 :>> ', this.msg);
+      axios.post("/messages", { body: this.msg });
+      // this.messages.push(this.msg);
+      this.msg = "";
     },
-    
   },
   mounted() {
-      // console.log("Component mounted.", window.Echo.channel("chat"));
-       
-      window.Echo.channel("aws_database_chat").listen("Message", ({message})=>{
-          console.log("message.", message);
-          this.messages.push({
-            id: Date.now(),
-            text: message
-          });
-            
+    // console.log("Component mounted.", window.Echo.channel("chat"));
+
+    window.Echo.channel("aws_database_chat").listen(
+      "Message",
+      ({ message }) => {
+        console.log("message.", message);
+        this.messages.push({
+          id: Date.now(),
+          text: message,
+        });
       }
     );
   },
   created() {
-    
     // window.Echo.channel("chat").listen("Message", ({ message }) => {
     //   // console.log('message.dody :>> ', message.body);
     //   this.messages.push(message);
